@@ -1,0 +1,24 @@
+{{- if .Values.followChangesForBranch }}
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: wind-turbine
+spec:
+  serviceAccountName: pipeline
+  triggers:
+  - bindings:
+    - ref: wind-turbine
+    template:
+      ref: wind-turbine
+    interceptors:
+    - params:
+        - name: filter
+          value: >-
+            (header.match('X-GitHub-Event', 'push') &&
+            body.ref.startsWith('refs/heads/{{ coalesce .Values.followChangesForBranch "main" }}'))
+        - name: overlays
+          value: null
+      ref:
+        kind: ClusterInterceptor
+        name: cel
+{{- end }}

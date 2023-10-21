@@ -1,0 +1,31 @@
+{{- if .Values.followChangesForBranch }}
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: {{ include "app.fullname" . }}-run-{{ .Release.Revision }}
+  labels:
+    tekton.dev/pipeline: wind-turbine-pipeline
+spec:
+  params:
+    - name: IMAGE_TAG
+      value: 1.0.0
+    - name: IMAGE_NAME
+      value: quay.io/modzelewski/nodejsdockerpipeline
+    - name: GIT_REPO
+      value: 'https://github.com/gmodzelewski/nodejsdockerpipeline.git'
+    - name: GIT_BRANCH
+      value: 'main'
+    - name: MANIFESTS_GIT_REPO
+      value: 'https://github.com/gmodzelewski/nodejsdockerpipeline-manifests.git'
+    - name: MANIFESTS_GIT_BRANCH
+      value: 'main'
+  pipelineRef:
+    name: wind-turbine-pipeline
+  workspaces:
+  - name: source
+    persistentVolumeClaim:
+      claimName: app-source
+  - name: maven-settings
+    persistentVolumeClaim:
+      claimName: build-cache-pvc
+{{- end }}

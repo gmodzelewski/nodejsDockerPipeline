@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nodejsdockerpipeline
+    app.kubernetes.io/component: nodejsdockerpipeline
+    app.kubernetes.io/instance: nodejsdockerpipeline
+    app.kubernetes.io/name: nodejsdockerpipeline
+    app.kubernetes.io/part-of: wind-turbine
+  name: nodejsdockerpipeline
+spec:
+  internalTrafficPolicy: Cluster
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  - name: 8443-tcp
+    port: 8443
+    protocol: TCP
+    targetPort: 8443
+  selector:
+    app: nodejsdockerpipeline
+  sessionAffinity: None
+  type: ClusterIP
+

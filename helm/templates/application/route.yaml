@@ -1,0 +1,23 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    openshift.io/host.generated: "true"
+  labels:
+    app: nodejsdockerpipeline
+    app.kubernetes.io/component: nodejsdockerpipeline
+    app.kubernetes.io/instance: nodejsdockerpipeline
+    app.kubernetes.io/name: nodejsdockerpipeline
+    app.kubernetes.io/part-of: wind-turbine
+  name: nodejsdockerpipeline
+spec:
+  port:
+    targetPort: 8080-tcp
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: nodejsdockerpipeline
+    weight: 100
+  wildcardPolicy: None

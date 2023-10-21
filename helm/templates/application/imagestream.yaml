@@ -1,0 +1,26 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/sync-wave: "-1"
+  labels:
+    app: nodejsdockerpipeline
+    app.kubernetes.io/component: nodejsdockerpipeline
+    app.kubernetes.io/name: nodejsdockerpipeline
+    app.kubernetes.io/part-of: wind-turbine
+  name: nodejsdockerpipeline
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+  - annotations:
+      openshift.io/imported-from: quay.io/modzelewski/nodejsdockerpipeline:{{ .Values.imageTag | default .Chart.AppVersion }}
+    from:
+      kind: DockerImage
+      name: quay.io/modzelewski/nodejsdockerpipeline:{{ .Values.imageTag | default .Chart.AppVersion }}
+    importPolicy:
+      importMode: Legacy
+    name: {{ .Values.imageTag | default .Chart.AppVersion }}
+    referencePolicy:
+      type: Source
